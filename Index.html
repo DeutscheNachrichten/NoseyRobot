@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deutsche Nachrichten - Aktuelle Meldungen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0055a4;
+            --primary-red: #d32f2f;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #333;
+            --text-dark: #222;
+            --text-light: #666;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-blue), #1a3a7a);
+            color: var(--white);
+            padding: 15px 25px;
+            position: relative;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
+            letter-spacing: -1px;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            color: var(--white);
+            font-weight: 300;
+        }
+        
+        .date-time {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            opacity: 0.9;
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            margin-top: 5px;
+            font-weight: 300;
+        }
+        
+        /* Navigation Styles */
+        nav {
+            background-color: var(--dark-gray);
+            padding: 0;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        nav li {
+            flex: 1;
+            text-align: center;
+        }
+        
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 15px 10px;
+            display: block;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-bottom: 3px solid var(--primary-red);
+        }
+        
+        /* Breaking News Banner */
+        .breaking-news {
+            background-color: var(--primary-red);
+            color: var(--white);
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+        }
+        
+        .breaking-news i {
+            margin-right: 10px;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* Main Content */
+        .content {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+        
+        .main-content {
+            background: var(--white);
+        }
+        
+        .sidebar {
+            background: var(--light-gray);
+            padding: 20px;
+            border-radius: var(--border-radius);
+        }
+        
+        /* Article Styles */
+        .featured-article {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--medium-gray);
+            padding-bottom: 30px;
+        }
+        
+        .article-header {
+            margin-bottom: 15px;
+        }
+        
+        .article-title {
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        
+        .article-meta {
+            color: var(--text-light);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .article-image {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            margin: 15px 0;
+            box-shadow: var(--shadow);
+            object-fit: cover;
+        }
+        
+        .article-body {
+            margin: 20px 0;
+        }
+        
+        .article-body p {
+            margin-bottom: 15px;
+            font-size: clamp(1rem, 2vw, 1.05rem);
+            line-height: 1.7;
+        }
+        
+        .article-body h3 {
+            color: var(--primary-blue);
+            margin: 20px 0 10px;
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+        }
+        
+        .article-body ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .article-body li {
+            margin: 8px 0;
+            font-size: clamp(0.95rem, 2vw, 1rem);
+        }
+        
+        .disclaimer {
+            background-color: #fff8e1;
+            border: 1px solid #ffecb3;
+            padding: 15px;
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+            font-style: italic;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+        }
+        
+        .censorship-note {
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary-red);
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+        }
+        
+        /* More Articles Section */
+        .section-title {
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-blue);
+        }
+        
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .mini-article {
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .mini-article:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .mini-article-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+        
+        .mini-article-content {
+            padding: 15px;
+        }
+        
+        .mini-article-title {
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+        
+        .mini-article:hover .mini-article-title {
+            color: var(--primary-blue);
+        }
+        
+        .mini-article-meta {
+            color: var(--text-light);
+            font-size: clamp(0.8rem, 2vw, 0.85rem);
+            margin-bottom: 10px;
+        }
+        
+        .mini-article-excerpt {
+            font-size: clamp(0.9rem, 2vw, 0.95rem);
+            color: var(--text-light);
+        }
+        
+        /* External News Section */
+        .external-news {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 30px;
+        }
+        
+        .external-news h3 {
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+        
+        .external-news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .external-link {
+            display: block;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: var(--transition);
+            border-left: 3px solid var(--primary-blue);
+        }
+        
+        .external-link:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .external-link h4 {
+            margin: 0 0 5px 0;
+            color: var(--primary-blue);
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        .external-link p {
+            font-size: clamp(0.8rem, 2vw, 0.85rem);
+            color: var(--text-light);
+            margin: 0;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+        
+        .popular-articles .mini-article {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border: none;
+            box-shadow: none;
+            border-bottom: 1px solid var(--medium-gray);
+            padding-bottom: 15px;
+        }
+        
+        .popular-articles .mini-article:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .popular-articles .mini-article-img {
+            width: 80px;
+            height: 80px;
+            margin-right: 12px;
+        }
+        
+        .popular-articles .mini-article-content {
+            padding: 0;
+        }
+        
+        .weather-widget {
+            background: linear-gradient(135deg, var(--primary-blue), #1a3a7a);
+            color: var(--white);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .weather-location {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            margin-bottom: 10px;
+        }
+        
+        .weather-temp {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .weather-desc {
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+            opacity: 0.9;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 30px 20px 15px;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .footer-section h3 {
+            color: var(--white);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+        }
+        
+        .footer-links a:hover {
+            color: var(--white);
+            text-decoration: underline;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #aaa;
+        }
+        
+        /* Newsletter form */
+        .newsletter-form {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: var(--border-radius);
+        }
+        
+        .newsletter-form input,
+        .newsletter-form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .newsletter-form button {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .newsletter-form button:hover {
+            background-color: #004494;
+        }
+        
+        /* Partners section */
+        .partners-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .partner-link {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+        
+        .partner-link:hover {
+            background-color: #e9ecef;
+            border-color: var(--primary-blue);
+        }
+        
+        .partner-logo {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            object-fit: contain;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .articles-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav li {
+                text-align: left;
+            }
+            
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .article-title {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+            
+            .articles-grid,
+            .external-news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="top-bar">
+                <div class="logo">
+                    <h1>Deutsche<span>Nachrichten</span></h1>
+                </div>
+                <div class="date-time">
+                    Samstag, 18. Oktober 2025 | 14:32 Uhr
+                </div>
+            </div>
+            <div class="subtitle">Unabhängige Berichterstattung seit 1949</div>
+        </header>
+
+        <div class="breaking-news">
+            <i class="fas fa-bolt"></i>
+            <span>Aktuell: Gipfeltreffen der EU-Staatschefs beginnt in Brüssel</span>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Startseite</a></li>
+                <li><a href="https://www.spiegel.de/politik" target="_blank">Politik</a></li>
+                <li><a href="https://www.handelsblatt.com/" target="_blank">Wirtschaft</a></li>
+                <li><a href="https://www.heise.de/" target="_blank">Technik</a></li>
+                <li><a href="https://www.sport1.de/" target="_blank">Sport</a></li>
+                <li><a href="https://www.zeit.de/kultur" target="_blank">Kultur</a></li>
+                <li><a href="https://www.tagesschau.de/wissenschaft" target="_blank">Wissenschaft</a></li>
+                <li><a href="https://www.focus.de/panorama/" target="_blank">Panorama</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <div class="main-content">
+                <article class="featured-article">
+                    <div class="article-header">
+                        <h1 class="article-title">Sensationsmeldung: Citra's Roboter "Nosey" - Fortschritt oder Bedrohung?</h1>
+                        <div class="article-meta">
+                            <span><i class="far fa-calendar"></i> Veröffentlicht am 18. Oktober 2025</span>
+                            <span><i class="far fa-user"></i> Von Redaktion Technik</span>
+                            <span><i class="fas fa-tag"></i> Kategorie: Technik</span>
+                        </div>
+                    </div>
+
+                    <img src="1.png" alt="Bild des Roboters Nosey" class="article-image" />
+
+                    <div class="article-body">
+                        <p>In einer beeindruckenden Demonstration auf <em>TikTok</em> hat der Künstler und Tüftler "Citra" Fortschritte an seinem Projekt "Nosey" gezeigt, das zunehmend realistischere Formen annimmt. Obwohl die offizielle Quelle des Berichts die soziale Plattform TikTok ist, begeistern die Videos und Bilder eine wachsende Fangemeinde und Experten gleichermaßen.</p>
+
+                        <h3>Technische Details</h3>
+                        <p>Der Roboter "Nosey" wird von Citra als multifunktionales Gerät konzipiert. Berichte aus der Online-Community, die die Entwicklung von Anfang an verfolgt, nennen unter anderem:</p>
+                        <ul>
+                            <li><strong>Feuerschutz:</strong> Integrierte Systeme sollen den Roboter vor hohen Temperaturen schützen.</li>
+                            <li><strong>Wasserschutz:</strong> Spezielle Abdichtungen ermöglichen den Einsatz auch bei Nässe.</li>
+                            <li><strong>Beweglichkeit:</strong> Fortschrittliche Gelenke und Antriebe erlauben komplexe Bewegungen.</li>
+                            <li><strong>Künstliche Intelligenz:</strong> Ein rudimentäres KI-System soll die Interaktion mit der Umwelt ermöglichen.</li>
+                        </ul>
+
+                        <img src="2.png" alt="Nahaufnahme des Roboterarms" class="article-image" />
+
+                        <p>Die genauen technischen Spezifikationen bleiben jedoch größtenteils unveröffentlicht. Citra hält viele Details geheim und veröffentlicht nur gelegentlich neue Videos oder Bilder, die die Weiterentwicklung zeigen.</p>
+
+                        <h3>Reaktionen und Diskussionen</h3>
+                        <p>Die Community ist gespalten. Einige sehen in "Nosey" ein ambitioniertes und innovatives Kunst- und Technikprojekt. Andere diskutieren intensiv über die ethischen Implikationen und die potenzielle Weiterentwicklung solcher Maschinen.</p>
+
+                        <p>Unabhängige Experten konnten bisher nicht hinzugezogen werden, da Citra als Einzelkämpfer arbeitet und keine offiziellen Tests oder Prüfungen stattgefunden haben. Dennoch wächst die Neugier.</p>
+
+                        <div class="censorship-note">
+                            [BILD GESPERRT - VON DEUTSCHER ZENSURBEHÖRDE ENTFERNT]
+                        </div>
+                        <p style="text-align: center; font-style: italic; color: #888;">
+                            Das ursprünglich hier angezeigte Bild (3.png) wurde auf Anordnung der zuständigen deutschen Behörden entfernt.
+                            Der Inhalt wurde als potenziell gefährdend für die öffentliche Sicherheit eingestuft.
+                        </p>
+
+                        <h3>Fazit</h3>
+                        <p>Ob "Nosey" letztendlich die versprochenen Fähigkeiten besitzt oder eher als künstlerisches Statement zu verstehen ist, bleibt abzuwarten. Fest steht jedoch: Citra hat es geschafft, eine komplexe technische und gesellschaftliche Diskussion in Gang zu setzen – direkt aus seinem Workshop und über soziale Medien.</p>
+
+                        <div class="disclaimer">
+                            <p><strong>Hinweis:</strong> Diese Meldung basiert auf Informationen aus sozialen Medien. Eine unabhängige Verifizierung der technischen Angaben ist derzeit nicht möglich.</p>
+                        </div>
+                    </div>
+                </article>
+
+
+            </div>
+
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="section-title">Wetter</h3>
+                    <div class="weather-widget">
+                        <div class="weather-location" id="weather-location">Berlin, Deutschland</div>
+                        <div class="weather-temp" id="weather-temp">—°C</div>
+                        <div class="weather-desc" id="weather-desc"><i class="fas fa-exclamation-triangle"></i> Nicht verfügbar</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="section-title">Meistgelesen</h3>
+                    <div class="popular-articles">
+                        <a href="https://www.spiegel.de/politik/deutschland/ki-in-der-medizin-neue-studie-zur-diagnosetraeglichkeit-und-effizienz-a-1234567.html" target="_blank" class="mini-article">
+                            <img src="https://cdn.prod.www.spiegel.de/images/55719100-7ed2-4b66-9570-70842a8088b1_w400_r1.77_fpx49.83_fpy49.73.jpg" alt="Artikel 1" class="mini-article-img">
+                            <div class="mini-article-content">
+                                <h3 class="mini-article-title">Neue Studie über KI in der Medizin veröffentlicht</h3>
+                                <div class="mini-article-meta">Spiegel Online | 1.452 Aufrufe</div>
+                            </div>
+                        </a>
+                        
+                        <a href="https://www.zeit.de/wirtschaft/2025-10/energiepreise-strom-gas-privathaushalte" target="_blank" class="mini-article">
+                            <img src="https://img.zeit.de/news/2025-10/18/energiepreise-steigen-1200x675.jpg" alt="Artikel 2" class="mini-article-img">
+                            <div class="mini-article-content">
+                                <h3 class="mini-article-title">Energiepreise steigen erneut an</h3>
+                                <div class="mini-article-meta">Die Zeit | 1.320 Aufrufe</div>
+                            </div>
+                        </a>
+                        
+                        <a href="https://www.focus.de/auto/fahrverbot-fuer-benziner-und-diesel-ab-2035-das-planen-die-europaeischen-autoregulierer_id_1234567.html" target="_blank" class="mini-article">
+                            <img src="https://p6.focus.de/img/fotos/id_1234567/elektroauto.jpg" alt="Artikel 3" class="mini-article-img">
+                            <div class="mini-article-content">
+                                <h3 class="mini-article-title">Fahrverbot für Verbrennungsmotoren ab 2035?</h3>
+                                <div class="mini-article-meta">Focus Online | 1.187 Aufrufe</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="section-title">Newsletter</h3>
+                    <div class="newsletter-form">
+                        <p style="margin-bottom: 15px;">Abonnieren Sie unseren täglichen Newsletter mit den wichtigsten Nachrichten!</p>
+                        <form>
+                            <input type="email" placeholder="Ihre E-Mail-Adresse">
+                            <button type="submit">Abonnieren</button>
+                        </form>
+                    </div>
+                </div>
+
+
+            </aside>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><a href="#agb" style="color: var(--white); text-decoration: none;">AGB</a></h3>
+                    <p style="color: #ccc; font-size: 0.9rem; line-height: 1.5;">
+                        Unsere Allgemeinen Geschäftsbedingungen regeln die Nutzung unserer Dienste. 
+                        Durch die Nutzung unserer Website stimmen Sie den AGB zu. 
+                        Änderungen werden rechtzeitig bekannt gegeben.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3><a href="#datenschutz" style="color: var(--white); text-decoration: none;">Datenschutz</a></h3>
+                    <p style="color: #ccc; font-size: 0.9rem; line-height: 1.5;">
+                        Wir nehmen den Schutz Ihrer persönlichen Daten ernst. 
+                        Ihre Daten werden vertraulich und nach den Datenschutzgesetzen verarbeitet. 
+                        Weitere Informationen finden Sie in unserer Datenschutzerklärung.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3><a href="#kontakt" style="color: var(--white); text-decoration: none;">Kontakt</a></h3>
+                    <p style="color: #ccc; font-size: 0.9rem; line-height: 1.5;">
+                        E-Mail: german@news.com<br>
+                        Telefon: +49 1763 46237682<br>
+                        Haben Sie Fragen oder Anregungen? 
+                        Wir freuen uns über Ihre Nachricht.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Deutsche Nachrichten. Alle Rechte vorbehalten.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Add functionality to make article images clickable
+        document.querySelectorAll('.mini-article-img').forEach(img => {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', function() {
+                const articleLink = this.closest('.mini-article');
+                if(articleLink && articleLink.href) {
+                    window.open(articleLink.href, '_blank');
+                }
+            });
+        });
+
+        // Add functionality to make article titles clickable
+        document.querySelectorAll('.mini-article-title').forEach(title => {
+            title.addEventListener('click', function() {
+                const article = this.closest('.mini-article');
+                if(article && article.href) {
+                    window.open(article.href, '_blank');
+                }
+            });
+        });
+
+        // Update the time daily
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const formattedDate = now.toLocaleDateString('de-DE', options);
+            document.querySelector('.date-time').textContent = formattedDate;
+        }
+        
+        updateTime();
+        setInterval(updateTime, 60000); // Update every minute
+
+        // Weather section always shows "Nicht verfügbar" - no API calls
+        document.getElementById('weather-temp').textContent = '—°C';
+        document.getElementById('weather-desc').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Nicht verfügbar';
+    </script>
+</body>
+</html>
